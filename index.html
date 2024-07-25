@@ -48,18 +48,8 @@
     </nav>
 
     <div class="container  mx-auto">
-        <div id="content" class="row">
-            <div class="card mx-4" style="width: 20rem;">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                        card's
-                        content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-            </div>
-        </div>
+        <div id="content" class="row">Loading....</div>
+    </div>
     </div>
     <div class="prevNext d-flex justify-content-center">
         <nav aria-label="Page navigation example">
@@ -82,7 +72,7 @@
 
         const fetchNews = async (query, pageno) => {
             try {
-                let a = await fetch(`https://newsapi.org/v2/everything?q=${query}&apiKey=352dbf8eba024e079b5066dbf27868e6&page=${pageno}`);
+                let a = await fetch(`/api?q=${query}&apiKey=352dbf8eba024e079b5066dbf27868e6&page=${pageno}`);
                 let r = await a.json();
                 console.log(r);
                 totalPages = Math.ceil(r.totalResults / articlesPerPage);
