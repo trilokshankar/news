@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pulse-Your favourite news place</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Pulse</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/?q=all&pageno=1">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/?q=weather&pageno=1">Weather</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/?q=sports&pageno=1">Sports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/?query=manchester+united&pageno=1">MANU</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/?q=India&pageno=1">India</a>
+                    </li>
+
+                    <form class="d-flex" role="search">
+                        <input class="form-control me-2" name="query" type="search" placeholder="Search"
+                            aria-label="Search">
+                        <input class="form-control me-2" name="query" type="hidden" value="1" placeholder="Search"
+                            aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container  mx-auto">
+        <div id="content" class="row">
+            <div class="card mx-4" style="width: 20rem;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                        card's
+                        content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="prevNext d-flex justify-content-center">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" id="prev" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" id="next" href="#">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script>
+        let articlesPerPage;
+        let totalPages;
+        console.log("js here")
+        let query = window.location.search.split("?")[1].split("&")[0].split("=")[1];
+        let pageno = parseInt(window.location.search.split("?")[1].split("&")[1].split("=")[1]);
+        console.log(query, pageno)
+
+        const fetchNews = async (query, pageno) => {
+            try {
+                let a = await fetch(`https://newsapi.org/v2/everything?q=${query}&apiKey=352dbf8eba024e079b5066dbf27868e6&page=${pageno}`);
+                let r = await a.json();
+                console.log(r);
+                totalPages = Math.ceil(r.totalResults / articlesPerPage);
+                prev.href = `/?q=${query}&pageno=${pageno - 1}`;
+                next.href = `/?q=${query}&pageno=${pageno + 1}`;
+                let str = "";
+                for (let item of r.articles) {
+                    str += `
+                <div class="card mx-10" style="width: 20rem;">
+                    <img src="${item.urlToImage || 'default-image.jpg'}" class="card-img-top" alt="${item.title}">
+                    <div class="card-body">
+                        <h5 class="card-title">${item.title}</h5>
+                        <p class="card-text">${item.description || 'No description available'}</p>
+                        <span class="fw-bold"> Published:${item.publishedAt}</span>
+                        <a href="${item.url}" class="btn btn-primary"$>Read more...</a>
+                    </div>
+                </div>`;
+                }
+                content.innerHTML = str;
+            } catch (error) {
+                console.error("Failed to fetch news:", error);
+            }
+        }
+
+
+        fetchNews(query, pageno)
+    </script>
+</body>
+
+</html>
